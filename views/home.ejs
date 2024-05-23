@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Buddy - IoT Device Monitoring System</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<h2 class="mt-4">Buddy - IoT Device Monitoring System</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Date-Received</th>
+					<th>Buddy-Payload</th>
+                    <th>Execution-Status</th>
+					<th>Execution Outcome</th>
+					<th>Triggering Event</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% data.forEach(element => { %>
+					<tr>
+						<td><%= element.uniqueID %></td>
+						<td><%= formatDate(element.receivedOn) %></td>
+						<td><%= element.buddyPayload %></td>
+                        <td><%= element.buddyPayloadExecutionStatus %></td>
+						<td><%= element.buddyPayloadExecutionOutcome %></td>
+						<td><%= element.triggeringEvent %></td>
+						<td>
+							<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#wimpModal" data-wimp-id="<%= element.uniqueID %>" data-wimp-receivedon="<%=formatDate(element.receivedOn) %>" data-wimp-buddypayload="<%= element.buddyPayload %>" data-wimp-buddypayloadexecutionstatus="<%= element.buddyPayloadExecutionStatus %>" data-wimp-buddyPayloadexecutionoutcome="<%= element.buddyPayloadExecutionOutcome %>" data-wimp-triggeringevent="<%= element.triggeringEvent %>">Edit</button>
+							<button class="btn btn-danger btn-sm" onclick="deleteAction('<%= element.uniqueID %>')">Delete</button>
+						</td>
+					</tr>
+				<% }) %>
+				<% function formatDate(date) { %>
+					<% const formattedDate = new Date(date).toISOString().slice(0, 19).replace('T',' ').trim(); %>
+					<% return formattedDate.toString(); %>
+				<% } %>
+			
+			</tbody>
+		</table>
+		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#wimpModal">Add Data</button>
+	</div>
+
+	<!-- User Modal -->
+	<div class="modal fade" id="wimpModal" tabindex="-1" role="dialog" aria-labelledby="wimpModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="wimpModalLabel">Add Data</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="wimpForm" onsubmit="saveAction(event)">
+						<input type="hidden" id="wimpId" name="wimpId">
+						<div class="form-group">
+							<label for="wimpReceivedon">Received On</label>
+							<input type="text" style="text-align: left;" maxlength="19" class="form-control" id="wimpReceivedon" name="WimpReceivedon" required>
+						</div>
+						<div class="form-group">
+							<label for="wimpBuddypayload">Payload</label>
+							<input type="text" class="form-control" id="wimpBuddypayload" name="wimpBuddypayload" required>
+						</div>
+                        <div class="form-group">
+							<label for="wimpBuddypayloadexecutionstatus">Execution Status</label>
+							<input type="text" class="form-control" id="wimpBuddypayloadexecutionstatus" name="wimpBuddypayloadexecutionstatus">
+						</div>
+                        <div class="form-group">
+							<label for="wimpBuddypayloadexecutionoutcome">Execution Outcome</label>
+							<input type="text" class="form-control" id="wimpBuddypayloadexecutionoutcome" name="wimpBuddypayloadexecutionoutcome">
+						</div>
+                        <div class="form-group">
+							<label for="wimpTriggeringevent">Triggering Event</label>
+							<input type="text" class="form-control" id="wimpTriggeringevent" name="wimpTriggeringevent">
+						</div>
+						<button type="submit" class="btn btn-primary">Save Data</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+	<script src="./js/home.js"></script>
+	<script src="./js/wimpModal.js"></script>
+
+</body>
+</html>
